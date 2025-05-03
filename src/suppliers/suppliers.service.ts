@@ -9,12 +9,14 @@ import {JwtService} from "@nestjs/jwt";
 import {Supplier} from "./entities/supplier.entity";
 import {CreateUserDto} from "../users/dto/create-user.dto";
 import {CreateClientDto} from "./dto/create-client.dto";
+import {Role} from "../users/entities/role.entity";
 
 @Injectable()
 export class SuppliersService {
 
     constructor(@InjectRepository(Supplier) private readonly supplierRepository: Repository<Supplier>,
                 @InjectRepository(User) private readonly userRepository: Repository<User>,
+                @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
                 private mailService: MailService,
                 private jwtService: JwtService) {
     }
@@ -22,6 +24,7 @@ export class SuppliersService {
     create(createSupplierDto: CreateSupplierDto) {
         return 'This action adds a new supplier';
     }
+
     async createExternal(createSupplierDto: CreateSupplierDto): Promise<User> {
         const supplier = new Supplier();
         supplier.siren = createSupplierDto.siren;
@@ -38,19 +41,20 @@ export class SuppliersService {
         // random temporary password
         supplierAdmin.hashPassword();
         const token = this.jwtService.sign(
-            { email: supplierAdmin.email },
-            { expiresIn: '24h' },
+            {email: supplierAdmin.email},
+            {expiresIn: '24h'},
         );
         await this.userRepository.save(supplierAdmin);
         await this.mailService.sendSetPasswordEmail(supplierAdmin, token);
         return this.supplierRepository.save(supplierAdmin);
     }
+
     findAll() {
         return `This action returns all suppliers`;
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} supplier`;
+    async findOne(id: number) {
+        return await this.supplierRepository.findOne({where: {id}});
     }
 
     update(id: number, updateSupplierDto: UpdateSupplierDto) {
@@ -62,7 +66,7 @@ export class SuppliersService {
     }
 
     async createClient(createUserDto: CreateUserDto) {
-        const supplier = await this.supplierRepository.findOne({where: {id : createUserDto.supplier?.id}});
+        const supplier = await this.supplierRepository.findOne({where: {id: createUserDto.supplier?.id}});
         if (!supplier) {
             throw new BadRequestException('Supplier not found');
         }
@@ -74,13 +78,19 @@ export class SuppliersService {
         clientUser.supplier = supplier;
         clientUser.createdAt = new Date();
         clientUser.password = Math.random().toString(36).slice(2).substring(0, 12);
+
+        const clientRole = await this.roleRepository.findOne({where: {name: 'CLIENT'}});
+        if (clientRole) {
+            clientUser.role = clientRole;
+        }
         // random temporary password
         clientUser.hashPassword();
         const token = this.jwtService.sign(
-            { email: clientUser.email },
-            { expiresIn: '24h' },
+            {email: clientUser.email},
+            {expiresIn: '24h'},
         );
-        await this.userRepository.save(clientUser);
+        const createdUser = await this.userRepository.save(clientUser);
         await this.mailService.sendSetPasswordEmail(clientUser, token);
+        return createdUser;
     }
 }

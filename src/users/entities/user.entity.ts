@@ -1,7 +1,8 @@
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Supplier} from "../../suppliers/entities/supplier.entity";
 import {Role} from "./role.entity";
 import * as bcrypt from 'bcryptjs';
+import {Quotation} from "../../quotations/entities/quotation.entity";
 
 @Entity()
 export class User {
@@ -24,6 +25,10 @@ export class User {
     @ManyToOne(() => Supplier, (supplier) => supplier.users)
     @JoinColumn()
     supplier: Supplier;
+
+
+    @OneToMany(() => Quotation, (quotation) => quotation.client)
+    quotations: Quotation[];
 
     @Column()
     createdAt: Date;

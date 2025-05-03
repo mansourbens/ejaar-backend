@@ -1,4 +1,4 @@
-import {IsArray, IsString} from "class-validator";
+import {IsArray, IsNumber, IsString} from "class-validator";
 
 export class CreateQuotationDto {
     @IsArray()
@@ -8,6 +8,12 @@ export class CreateQuotationDto {
         units: number;
     }[];
 
-    @IsString()
-    duration: string;
+    @IsNumber()
+    duration: number;
+
+    @IsNumber()
+    clientId: number;
+
+    @IsNumber()
+    supplierId: number;
 }

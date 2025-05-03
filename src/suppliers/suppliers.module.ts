@@ -7,9 +7,10 @@ import {Supplier} from "./entities/supplier.entity";
 import {MailService} from "../mail/mail.service";
 import {JwtModule} from "@nestjs/jwt";
 import {ConfigModule, ConfigService} from "@nestjs/config";
+import {Role} from "../users/entities/role.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Supplier, User]),
+  imports: [TypeOrmModule.forFeature([Supplier, User, Role]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
