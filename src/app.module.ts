@@ -50,6 +50,14 @@ import {ConnectionTrackerInterceptor} from "./auth/interceptors/connection-track
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       autoLoadEntities: true,
+      ssl: {
+        rejectUnauthorized: false // Required for OVH's self-signed cert
+      },
+      extra: {
+        ssl: {
+          require: true, // Force SSL
+        }
+      },
       entities: [__dirname + '/**/*.entity.{ts,js}'], // or explicitly list entities
       synchronize: true, // ⚠️ use false in prod and manage migrations
     }),
