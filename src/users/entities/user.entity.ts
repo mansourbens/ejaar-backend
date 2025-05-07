@@ -30,7 +30,7 @@ export class User {
     @OneToMany(() => Quotation, (quotation) => quotation.client)
     quotations: Quotation[];
 
-    @Column()
+    @Column({ default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
 
     @Column({ nullable: true })

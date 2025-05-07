@@ -1,13 +1,14 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import {NestFactory} from '@nestjs/core';
+import {AppModule} from './app.module';
 import {UsersService} from "./users/users.service";
 import {Role} from "./users/entities/role.entity";
-import {Repository} from "typeorm";
 import {RolesService} from "./users/roles.service";
 import {CreateUserDto} from "./users/dto/create-user.dto";
+import {UserRole} from "./users/enums/user-role.enum";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.enableCors({
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true, // Allow cookies & auth headers
@@ -17,10 +18,10 @@ async function bootstrap() {
   const rolesService = app.get(RolesService);  // Inject role repo for admin role
 
   // Check if the super admin role exists, create it if not
-  let superAdminRole = await rolesService.findByName('SUPER_ADMIN');
+  let superAdminRole = await rolesService.findByName(UserRole.SUPER_ADMIN);
   if (!superAdminRole) {
     superAdminRole = new Role();
-    superAdminRole.name = 'SUPER_ADMIN';
+    superAdminRole.name = UserRole.SUPER_ADMIN;
     await rolesService.save(superAdminRole);
   }
 

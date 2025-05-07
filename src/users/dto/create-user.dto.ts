@@ -9,13 +9,13 @@ export class CreateUserDto {
     email: string;
 
     @IsString()
-    @IsNotEmpty()
+    @IsOptional()
     password: string;
 
     // Optionally, you can validate the role and supplier.
     // If the role and supplier are required fields for creating a user,
     // you can leave them as non-optional.
-    @IsNotEmpty()
+    @IsOptional()
     role: Role;
 
     @IsOptional()
@@ -33,6 +33,9 @@ export class CreateUserDto {
 
     @IsOptional()
     updatedAt?: Date;
+
+    @IsOptional()
+    userType?: UserType;
 }
 interface Client {
     id?: number;
@@ -43,4 +46,8 @@ interface Client {
     users?: User[];
     createdAt?: Date,
     updatedAt?: Date
+}
+export enum UserType {
+    CLIENT = 'CLIENT',
+    FOURNISSEUR = 'FOURNISSEUR',
 }

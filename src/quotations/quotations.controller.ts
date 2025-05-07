@@ -30,15 +30,56 @@ export class QuotationsController {
         return this.quotationsService.findAll();
     }
 
+
+    @Get('template')
+    downloadTemplate( @Res() res: Response) {
+        const filePath = '/var/opt/ejaar/templates/template_materiel_devis.xlsx';
+
+        // 3. Check if file exists
+        if (!existsSync(filePath)) {
+            throw new NotFoundException('File not found on server');
+        }
+
+        // 4. Send the file
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader(
+            'Content-Disposition',
+            `attachment; filename="materiel_devis"`
+        );
+        res.sendFile(filePath);
+    }
+    @Get('/to-bank/:id')
+    sendToBank(@Param('id') id: string) {
+        return this.quotationsService.sendToBank(+id);
+    }
+    @Get('/validate-folder/:id')
+    validateFolder(@Param('id') id: string) {
+        return this.quotationsService.validateFolder(+id);
+    }
+    @Get('/to-verification/:id')
+    sendToVerification(@Param('id') id: string) {
+        return this.quotationsService.sendToVerification(+id);
+    }
+    @Get('/client/:clientId')
+    findAllByClient(@Param('clientId') clientId: string) {
+        return this.quotationsService.findAllByClient(clientId);
+    }
+
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.quotationsService.findOne(+id);
+    }
+
+    @Patch('/reject/:id')
+    reject(@Param('id') id: string, @Body() body : {reason: string}) {
+        return this.quotationsService.reject(+id, body.reason);
     }
 
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateQuotationDto: UpdateQuotationDto) {
         return this.quotationsService.update(+id, updateQuotationDto);
     }
+
 
     @Delete(':id')
     remove(@Param('id') id: string) {
@@ -60,8 +101,9 @@ export class QuotationsController {
         }
         quotation.status = QuotationStatusEnum.GENERE;
         quotation.duration = formData.duration;
-
-
+        quotation.createdAt = new Date();
+        quotation.number = this.quotationsService.generateUniqueNumber();
+        quotation.devices = formData.devices.map(dev => dev.type).join(',');
         // Define PDF fonts
         const fonts = {
             Roboto: {
@@ -418,6 +460,7 @@ export class QuotationsController {
         );
         res.sendFile(filePath);
     }
+
 
     @Patch(':id/validate')
     async validateQuotation(

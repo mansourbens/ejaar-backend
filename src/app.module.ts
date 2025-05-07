@@ -14,6 +14,7 @@ import { join } from 'path';
 import {ServeStaticModule} from "@nestjs/serve-static";
 import {APP_INTERCEPTOR} from "@nestjs/core";
 import {ConnectionTrackerInterceptor} from "./auth/interceptors/connection-tracker.interceptor";
+import { UploadFileModule } from './upload-file/upload-file.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import {ConnectionTrackerInterceptor} from "./auth/interceptors/connection-track
     UsersModule,
     SuppliersModule,
     QuotationsModule,
+    UploadFileModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailService

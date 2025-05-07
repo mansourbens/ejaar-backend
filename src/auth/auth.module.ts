@@ -12,6 +12,7 @@ import {MailService} from "../mail/mail.service";
 import {JwtStrategy} from "./auth.strategy";
 import {APP_INTERCEPTOR} from "@nestjs/core";
 import {ConnectionTrackerInterceptor} from "./interceptors/connection-tracker.interceptor";
+import {RolesService} from "../users/roles.service";
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import {ConnectionTrackerInterceptor} from "./interceptors/connection-tracker.in
     UsersModule,
     TypeOrmModule.forFeature([User, Role])
   ],
-  providers: [AuthService, UsersService, MailService, JwtStrategy,   {
+  providers: [AuthService, UsersService, MailService, RolesService, JwtStrategy,   {
     provide: APP_INTERCEPTOR,
     useClass: ConnectionTrackerInterceptor,
   },],

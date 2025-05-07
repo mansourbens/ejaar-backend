@@ -1,24 +1,45 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
   BadRequestException,
-  ParseIntPipe
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  UseGuards
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {UsersService} from './users.service';
+import {CreateUserDto, UserType} from './dto/create-user.dto';
+import {UpdateUserDto} from './dto/update-user.dto';
 import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {RolesService} from "./roles.service";
+import {UserRole} from "./enums/user-role.enum";
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+      private readonly usersService: UsersService,
+      private readonly rolesService: RolesService) {}
+
+  @Post('/bank')
+  async createBannkUser(@Body() createUserDto: CreateUserDto) {
+    const existingUser = await this.usersService.findByEmail(createUserDto.email);
+
+    if (existingUser) {
+      throw new BadRequestException('Un utilisateur avec cet email existe déjà.');
+    }
+    await this.usersService.createBankUser(createUserDto);
+
+
+    return {
+      message: 'Utilisateur créé avec succès. Un email a été envoyé avec ses identifiants.',
+    };
+  }
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {

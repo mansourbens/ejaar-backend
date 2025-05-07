@@ -9,11 +9,17 @@ import {MailService} from "../mail/mail.service";
 import {AuthModule} from "../auth/auth.module";
 import {JwtModule} from "@nestjs/jwt";
 import {ConfigModule, ConfigService} from "@nestjs/config";
+import {Supplier} from "../suppliers/entities/supplier.entity";
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Role]),
-
-  ],
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+      }),
+    }),],
   controllers: [UsersController],
   providers: [UsersService, RolesService, MailService],
 })

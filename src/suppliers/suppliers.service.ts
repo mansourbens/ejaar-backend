@@ -8,8 +8,8 @@ import {MailService} from "../mail/mail.service";
 import {JwtService} from "@nestjs/jwt";
 import {Supplier} from "./entities/supplier.entity";
 import {CreateUserDto} from "../users/dto/create-user.dto";
-import {CreateClientDto} from "./dto/create-client.dto";
 import {Role} from "../users/entities/role.entity";
+import {UserRole} from "../users/enums/user-role.enum";
 
 @Injectable()
 export class SuppliersService {
@@ -79,7 +79,7 @@ export class SuppliersService {
         clientUser.createdAt = new Date();
         clientUser.password = Math.random().toString(36).slice(2).substring(0, 12);
 
-        const clientRole = await this.roleRepository.findOne({where: {name: 'CLIENT'}});
+        const clientRole = await this.roleRepository.findOne({where: {name: UserRole.CLIENT}});
         if (clientRole) {
             clientUser.role = clientRole;
         }
