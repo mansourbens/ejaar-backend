@@ -8,9 +8,19 @@ import {UserRole} from "./users/enums/user-role.enum";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'https://ejaar.ma',
+    'https://www.ejaar.ma'
+  ];
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true, // Allow cookies & auth headers
   });
   app.setGlobalPrefix('api');
