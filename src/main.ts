@@ -5,6 +5,8 @@ import {Role} from "./users/entities/role.entity";
 import {RolesService} from "./users/roles.service";
 import {CreateUserDto} from "./users/dto/create-user.dto";
 import {UserRole} from "./users/enums/user-role.enum";
+import {CalculationRate} from "./calculation-rates/entities/calculation-rate.entity";
+import {CalculationRatesService} from "./calculation-rates/calculation-rates.service";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,6 +28,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   const usersService = app.get(UsersService);  // Inject your service to access DB
   const rolesService = app.get(RolesService);  // Inject role repo for admin role
+  const calculationRatesService = app.get(CalculationRatesService);  // Inject role repo for admin role
 
   // Check if the super admin role exists, create it if not
   let superAdminRole = await rolesService.findByName(UserRole.SUPER_ADMIN);
@@ -47,6 +50,18 @@ async function bootstrap() {
 
     const user = await usersService.create(superAdmin);
     console.log(`Super Admin created: ${user.email}`);
+  }
+  let calculationRate = await calculationRatesService.findOne(1);
+  if (!calculationRate) {
+    calculationRate = {
+      residualValuePercentage: 5,
+      fileFeesPercentage: 3,
+      financingSpreadAnnual: 3,
+      leaserFinancingRateAnnual: 7.5,
+      id: 1
+    }
+    const t = await calculationRatesService.create(calculationRate);
+    console.log(`Calculation rates created`);
   }
   await app.listen(process.env.PORT ?? 3000);
 }

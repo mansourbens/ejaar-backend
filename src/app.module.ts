@@ -15,6 +15,7 @@ import {ServeStaticModule} from "@nestjs/serve-static";
 import {APP_INTERCEPTOR} from "@nestjs/core";
 import {ConnectionTrackerInterceptor} from "./auth/interceptors/connection-tracker.interceptor";
 import { UploadFileModule } from './upload-file/upload-file.module';
+import { CalculationRatesModule } from './calculation-rates/calculation-rates.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { UploadFileModule } from './upload-file/upload-file.module';
     SuppliersModule,
     QuotationsModule,
     UploadFileModule,
+    CalculationRatesModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailService
