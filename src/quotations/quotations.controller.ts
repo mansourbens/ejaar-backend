@@ -225,7 +225,7 @@ export class QuotationsController {
 
         quotation.amount = totalFinancedAmount;
 
-        const docDefinition: TDocumentDefinitions = {
+        const docDefinition: any = {
             content: [
                 // Header section
                 {
@@ -271,169 +271,6 @@ export class QuotationsController {
                     columnGap: 20,
                     margin: [0, 0, 0, 20]
                 },
-
-                // 24 months equipment table
-                ...(details24Months.deviceRows.length > 0 ? [
-                    {
-                        text: 'Matériel en location sur 24 mois',
-                        style: 'durationHeader',
-                        margin: [0, 0, 0, 10]
-                    },
-                    {
-                        table: {
-                            headerRows: 1,
-                            widths: ['*', '*', 'auto', 'auto', 'auto', 'auto'],
-                            body: [
-                                [
-                                    {text: 'Type de matériel', style: 'tableHeaderCell'},
-                                    {text: 'Référence', style: 'tableHeaderCell'},
-                                    {text: 'Designation', style: 'tableHeaderCell'},
-                                    {text: 'Quantité', style: 'tableHeaderCell'},
-                                    {text: 'Prix Unitaire HT', style: 'tableHeaderCell'},
-                                    {text: 'Loyer HT', style: 'tableHeaderCell'},
-                                ],
-                                ...details24Months.deviceRows,
-                                [
-                                    {text: 'Loyers Totaux (HT)', colSpan: 5, style: 'totalLabel'},
-                                    {}, {}, {}, {},
-                                    {text: details24Months.totalMonthlyPayment.toFixed(0) + ' DH', style: 'totalValue'}
-                                ],
-                                [
-                                    {text: 'Loyer sur 24 mois (HT)', colSpan: 5, style: 'totalLabel'},
-                                    {}, {}, {}, {},
-                                    {text: details24Months.totalLeasingCost.toFixed(0) + ' DH', style: 'totalValue'}
-                                ]
-                            ]
-                        },
-                        layout: {
-                            hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 1 : 0.5,
-                            vLineWidth: () => 0.5,
-                            hLineColor: () => '#aaaaaa',
-                            vLineColor: () => '#aaaaaa',
-                        },
-                        margin: [0, 0, 0, 20]
-                    },
-                ] : []),
-
-                {text: ''},
-                ...(details36Months.deviceRows.length > 0 ? [
-                    {
-                        text: 'Matériel en location sur 36 mois',
-                        style: 'durationHeader',
-                        margin: [0, 20, 0, 10]
-                    },
-                    {
-                        table: {
-                            headerRows: 1,
-                            widths: ['*', '*', 'auto', 'auto', 'auto', 'auto'],
-                            body: [
-                                [
-                                    {text: 'Type de matériel', style: 'tableHeaderCell'},
-                                    {text: 'Référence', style: 'tableHeaderCell'},
-                                    {text: 'Designation', style: 'tableHeaderCell'},
-                                    {text: 'Quantité', style: 'tableHeaderCell'},
-                                    {text: 'Prix Unitaire HT', style: 'tableHeaderCell'},
-                                    {text: 'Loyer HT', style: 'tableHeaderCell'},
-                                ],
-                                ...details36Months.deviceRows,
-                                [
-                                    {text: 'Loyers Totaux (HT)', colSpan: 5, style: 'totalLabel'},
-                                    {}, {}, {}, {},
-                                    {text: details36Months.totalMonthlyPayment.toFixed(0) + ' DH', style: 'totalValue'}
-                                ],
-                                [
-                                    {text: 'Loyer sur 36 mois (HT)', colSpan: 5, style: 'totalLabel'},
-                                    {}, {}, {}, {},
-                                    {text: details36Months.totalLeasingCost.toFixed(0) + ' DH', style: 'totalValue'}
-                                ]
-                            ]
-                        },
-                        layout: {
-                            hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 1 : 0.5,
-                            vLineWidth: () => 0.5,
-                            hLineColor: () => '#aaaaaa',
-                            vLineColor: () => '#aaaaaa',
-                        },
-                        margin: [0, 0, 0, 20]
-                    }
-                ] : []),
-                {text: '', pageBreak: 'before'},
-                // Operation summary
-                {
-                    text: 'Récapitulatif de l\'opération',
-                    style: 'summaryHeader',
-                    margin: [0, 20, 0, 10]
-                },
-                {
-                    table: {
-                        widths: ['*', 'auto'],
-                        body: [
-                            [
-                                {text: 'Total matériel financé', style: 'summaryLabel'},
-                                {text: totalFinancedAmount.toFixed(0) + ' DH', style: 'summaryValue'}
-                            ],
-                            [
-                                {text: 'Loyers mensuels', style: 'summaryLabel'},
-                                {text: totalMonthlyPayments.toFixed(0) + ' DH', style: 'summaryValue'}
-                            ],
-                            [
-                                {text: 'Total loyers dûs sur la période du contrat', style: 'summaryLabel'},
-                                {text: totalLeasingCost.toFixed(0) + ' DH', style: 'summaryValue'}
-                            ],
-                            [
-                                {
-                                    text: 'Option d\'achat activable a postériori\n' +
-                                        '(Valeur résiduelle + 2% du matériel)',
-                                    style: 'summaryLabel'
-                                },
-                                {text: totalPurchaseOption.toFixed(0) + ' DH', style: 'summaryValue'}
-                            ],
-                            [
-                                {
-                                    text: 'Total opération y compris l\'option d\'achat',
-                                    style: 'summaryLabel',
-                                    bold: true
-                                },
-                                {text: totalOperationCost.toFixed(0) + ' DH', style: 'summaryValue', bold: true}
-                            ]
-                        ]
-                    },
-                    layout: {
-                        hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 1 : 0.5,
-                        vLineWidth: () => 0.5,
-                        hLineColor: () => '#aaaaaa',
-                        vLineColor: () => '#aaaaaa',
-                    },
-                    margin: [0, 0, 0, 40]
-                },
-
-                // Conditions and signature
-                {
-                    text: 'Conditions générales :',
-                    style: 'conditionsHeader',
-                    margin: [0, 0, 0, 5]
-                },
-                {
-                    ul: [
-                        'Paiement mensuel par prélèvement automatique',
-                        'Assurance incluse dans la mensualité',
-                        'Option d\'achat en fin de contrat',
-                        'Délai de validité : 15 jours',
-                        'Engagement pour la durée totale du contrat'
-                    ],
-                    style: 'conditionsText',
-                    margin: [0, 0, 0, 20]
-                },
-                {
-                    text: 'Bon pour accord',
-                    style: 'signatureLabel',
-                    margin: [0, 40, 0, 5]
-                },
-                {
-                    text: 'Le Client',
-                    style: 'signatureText',
-                    margin: [0, 0, 0, 0]
-                }
             ],
             styles: {
                 header: {
@@ -551,6 +388,178 @@ export class QuotationsController {
                 };
             }
         };
+
+        if (details24Months.deviceRows.length) {
+            docDefinition.content?.push(
+                // 24 months equipment table
+                    {
+                        text: 'Matériel en location sur 24 mois',
+                        style: 'durationHeader',
+                        margin: [0, 0, 0, 10]
+                    },
+                    {
+                        table: {
+                            headerRows: 1,
+                            widths: ['*', '*', 'auto', 'auto', 'auto', 'auto'],
+                            body: [
+                                [
+                                    {text: 'Type de matériel', style: 'tableHeaderCell'},
+                                    {text: 'Référence', style: 'tableHeaderCell'},
+                                    {text: 'Designation', style: 'tableHeaderCell'},
+                                    {text: 'Quantité', style: 'tableHeaderCell'},
+                                    {text: 'Prix Unitaire HT', style: 'tableHeaderCell'},
+                                    {text: 'Loyer HT', style: 'tableHeaderCell'},
+                                ],
+                                ...details24Months.deviceRows,
+                                [
+                                    {text: 'Loyers Totaux (HT)', colSpan: 5, style: 'totalLabel'},
+                                    {}, {}, {}, {},
+                                    {text: details24Months.totalMonthlyPayment.toFixed(0) + ' DH', style: 'totalValue'}
+                                ],
+                                [
+                                    {text: 'Loyer sur 24 mois (HT)', colSpan: 5, style: 'totalLabel'},
+                                    {}, {}, {}, {},
+                                    {text: details24Months.totalLeasingCost.toFixed(0) + ' DH', style: 'totalValue'}
+                                ]
+                            ]
+                        },
+                        layout: {
+                            hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 1 : 0.5,
+                            vLineWidth: () => 0.5,
+                            hLineColor: () => '#aaaaaa',
+                            vLineColor: () => '#aaaaaa',
+                        },
+                        margin: [0, 0, 0, 20]
+                    },
+
+                {text: ''},
+            );
+        }
+        if (details36Months.deviceRows.length) {
+            docDefinition.content.push(
+                {
+                    text: 'Matériel en location sur 36 mois',
+                    style: 'durationHeader',
+                    margin: [0, 20, 0, 10]
+                },
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: ['*', '*', 'auto', 'auto', 'auto', 'auto'],
+                        body: [
+                            [
+                                {text: 'Type de matériel', style: 'tableHeaderCell'},
+                                {text: 'Référence', style: 'tableHeaderCell'},
+                                {text: 'Designation', style: 'tableHeaderCell'},
+                                {text: 'Quantité', style: 'tableHeaderCell'},
+                                {text: 'Prix Unitaire HT', style: 'tableHeaderCell'},
+                                {text: 'Loyer HT', style: 'tableHeaderCell'},
+                            ],
+                            ...details36Months.deviceRows,
+                            [
+                                {text: 'Loyers Totaux (HT)', colSpan: 5, style: 'totalLabel'},
+                                {}, {}, {}, {},
+                                {text: details36Months.totalMonthlyPayment.toFixed(0) + ' DH', style: 'totalValue'}
+                            ],
+                            [
+                                {text: 'Loyer sur 36 mois (HT)', colSpan: 5, style: 'totalLabel'},
+                                {}, {}, {}, {},
+                                {text: details36Months.totalLeasingCost.toFixed(0) + ' DH', style: 'totalValue'}
+                            ]
+                        ]
+                    },
+                    layout: {
+                        hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 1 : 0.5,
+                        vLineWidth: () => 0.5,
+                        hLineColor: () => '#aaaaaa',
+                        vLineColor: () => '#aaaaaa',
+                    },
+                    margin: [0, 0, 0, 20]
+                },
+            )
+
+        }
+        docDefinition.content.push(
+            {text: '', pageBreak: 'before'},
+            // Operation summary
+            {
+                text: 'Récapitulatif de l\'opération',
+                style: 'summaryHeader',
+                margin: [0, 20, 0, 10]
+            },
+            {
+                table: {
+                    widths: ['*', 'auto'],
+                    body: [
+                        [
+                            {text: 'Total matériel financé', style: 'summaryLabel'},
+                            {text: totalFinancedAmount.toFixed(0) + ' DH', style: 'summaryValue'}
+                        ],
+                        [
+                            {text: 'Loyers mensuels', style: 'summaryLabel'},
+                            {text: totalMonthlyPayments.toFixed(0) + ' DH', style: 'summaryValue'}
+                        ],
+                        [
+                            {text: 'Total loyers dûs sur la période du contrat', style: 'summaryLabel'},
+                            {text: totalLeasingCost.toFixed(0) + ' DH', style: 'summaryValue'}
+                        ],
+                        [
+                            {
+                                text: 'Option d\'achat activable a postériori\n' +
+                                    '(Valeur résiduelle + 2% du matériel)',
+                                style: 'summaryLabel'
+                            },
+                            {text: totalPurchaseOption.toFixed(0) + ' DH', style: 'summaryValue'}
+                        ],
+                        [
+                            {
+                                text: 'Total opération y compris l\'option d\'achat',
+                                style: 'summaryLabel',
+                                bold: true
+                            },
+                            {text: totalOperationCost.toFixed(0) + ' DH', style: 'summaryValue', bold: true}
+                        ]
+                    ]
+                },
+                layout: {
+                    hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 1 : 0.5,
+                    vLineWidth: () => 0.5,
+                    hLineColor: () => '#aaaaaa',
+                    vLineColor: () => '#aaaaaa',
+                },
+                margin: [0, 0, 0, 40]
+            },
+
+            // Conditions and signature
+            {
+                text: 'Conditions générales :',
+                style: 'conditionsHeader',
+                margin: [0, 0, 0, 5]
+            },
+            {
+                ul: [
+                    'Paiement mensuel par prélèvement automatique',
+                    'Assurance incluse dans la mensualité',
+                    'Option d\'achat en fin de contrat',
+                    'Délai de validité : 15 jours',
+                    'Engagement pour la durée totale du contrat'
+                ],
+                style: 'conditionsText',
+                margin: [0, 0, 0, 20]
+            },
+            {
+                text: 'Bon pour accord',
+                style: 'signatureLabel',
+                margin: [0, 40, 0, 5]
+            },
+            {
+                text: 'Le Client',
+                style: 'signatureText',
+                margin: [0, 0, 0, 0]
+            }
+        )
+
+
         // Create the PDF document
         const pdfDoc = printer.createPdfKitDocument(docDefinition);
 
@@ -708,7 +717,7 @@ export class QuotationsController {
         const totalLeasingCost = (details24Months?.totalLeasingCost || 0) + (details36Months?.totalLeasingCost || 0);
         const totalOperationCost = totalLeasingCost + totalPurchaseOption;
 
-        const docDefinition: TDocumentDefinitions = {
+        const docDefinition: any = {
             content: [
                 // Header section
                 {
@@ -754,169 +763,6 @@ export class QuotationsController {
                     columnGap: 20,
                     margin: [0, 0, 0, 20]
                 },
-
-                // 24 months equipment table
-                ...(details24Months.deviceRows.length > 0 ? [
-                    {
-                        text: 'Matériel en location sur 24 mois',
-                        style: 'durationHeader',
-                        margin: [0, 0, 0, 10]
-                    },
-                    {
-                        table: {
-                            headerRows: 1,
-                            widths: ['*', '*', 'auto', 'auto', 'auto', 'auto'],
-                            body: [
-                                [
-                                    {text: 'Type de matériel', style: 'tableHeaderCell'},
-                                    {text: 'Référence', style: 'tableHeaderCell'},
-                                    {text: 'Designation', style: 'tableHeaderCell'},
-                                    {text: 'Quantité', style: 'tableHeaderCell'},
-                                    {text: 'Prix Unitaire HT', style: 'tableHeaderCell'},
-                                    {text: 'Loyer HT', style: 'tableHeaderCell'},
-                                ],
-                                ...details24Months.deviceRows,
-                                [
-                                    {text: 'Loyers Totaux (HT)', colSpan: 5, style: 'totalLabel'},
-                                    {}, {}, {}, {},
-                                    {text: details24Months.totalMonthlyPayment.toFixed(0) + ' DH', style: 'totalValue'}
-                                ],
-                                [
-                                    {text: 'Loyer sur 24 mois (HT)', colSpan: 5, style: 'totalLabel'},
-                                    {}, {}, {}, {},
-                                    {text: details24Months.totalLeasingCost.toFixed(0) + ' DH', style: 'totalValue'}
-                                ]
-                            ]
-                        },
-                        layout: {
-                            hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 1 : 0.5,
-                            vLineWidth: () => 0.5,
-                            hLineColor: () => '#aaaaaa',
-                            vLineColor: () => '#aaaaaa',
-                        },
-                        margin: [0, 0, 0, 20]
-                    },
-                ] : []),
-
-                {text: ''},
-                ...(details36Months.deviceRows.length > 0 ? [
-                    {
-                        text: 'Matériel en location sur 36 mois',
-                        style: 'durationHeader',
-                        margin: [0, 20, 0, 10]
-                    },
-                    {
-                        table: {
-                            headerRows: 1,
-                            widths: ['*', '*', 'auto', 'auto', 'auto', 'auto'],
-                            body: [
-                                [
-                                    {text: 'Type de matériel', style: 'tableHeaderCell'},
-                                    {text: 'Référence', style: 'tableHeaderCell'},
-                                    {text: 'Designation', style: 'tableHeaderCell'},
-                                    {text: 'Quantité', style: 'tableHeaderCell'},
-                                    {text: 'Prix Unitaire HT', style: 'tableHeaderCell'},
-                                    {text: 'Loyer HT', style: 'tableHeaderCell'},
-                                ],
-                                ...details36Months.deviceRows,
-                                [
-                                    {text: 'Loyers Totaux (HT)', colSpan: 5, style: 'totalLabel'},
-                                    {}, {}, {}, {},
-                                    {text: details36Months.totalMonthlyPayment.toFixed(0) + ' DH', style: 'totalValue'}
-                                ],
-                                [
-                                    {text: 'Loyer sur 36 mois (HT)', colSpan: 5, style: 'totalLabel'},
-                                    {}, {}, {}, {},
-                                    {text: details36Months.totalLeasingCost.toFixed(0) + ' DH', style: 'totalValue'}
-                                ]
-                            ]
-                        },
-                        layout: {
-                            hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 1 : 0.5,
-                            vLineWidth: () => 0.5,
-                            hLineColor: () => '#aaaaaa',
-                            vLineColor: () => '#aaaaaa',
-                        },
-                        margin: [0, 0, 0, 20]
-                    }
-                ] : []),
-                {text: '', pageBreak: 'before'},
-                // Operation summary
-                {
-                    text: 'Récapitulatif de l\'opération',
-                    style: 'summaryHeader',
-                    margin: [0, 20, 0, 10]
-                },
-                {
-                    table: {
-                        widths: ['*', 'auto'],
-                        body: [
-                            [
-                                {text: 'Total matériel financé', style: 'summaryLabel'},
-                                {text: totalFinancedAmount.toFixed(0) + ' DH', style: 'summaryValue'}
-                            ],
-                            [
-                                {text: 'Loyers mensuels', style: 'summaryLabel'},
-                                {text: totalMonthlyPayments.toFixed(0) + ' DH', style: 'summaryValue'}
-                            ],
-                            [
-                                {text: 'Total loyers dûs sur la période du contrat', style: 'summaryLabel'},
-                                {text: totalLeasingCost.toFixed(0) + ' DH', style: 'summaryValue'}
-                            ],
-                            [
-                                {
-                                    text: 'Option d\'achat activable a postériori\n' +
-                                        '(Valeur résiduelle + 2% du matériel)',
-                                    style: 'summaryLabel'
-                                },
-                                {text: totalPurchaseOption.toFixed(0) + ' DH', style: 'summaryValue'}
-                            ],
-                            [
-                                {
-                                    text: 'Total opération y compris l\'option d\'achat',
-                                    style: 'summaryLabel',
-                                    bold: true
-                                },
-                                {text: totalOperationCost.toFixed(0) + ' DH', style: 'summaryValue', bold: true}
-                            ]
-                        ]
-                    },
-                    layout: {
-                        hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 1 : 0.5,
-                        vLineWidth: () => 0.5,
-                        hLineColor: () => '#aaaaaa',
-                        vLineColor: () => '#aaaaaa',
-                    },
-                    margin: [0, 0, 0, 40]
-                },
-
-                // Conditions and signature
-                {
-                    text: 'Conditions générales :',
-                    style: 'conditionsHeader',
-                    margin: [0, 0, 0, 5]
-                },
-                {
-                    ul: [
-                        'Paiement mensuel par prélèvement automatique',
-                        'Assurance incluse dans la mensualité',
-                        'Option d\'achat en fin de contrat',
-                        'Délai de validité : 15 jours',
-                        'Engagement pour la durée totale du contrat'
-                    ],
-                    style: 'conditionsText',
-                    margin: [0, 0, 0, 20]
-                },
-                {
-                    text: 'Bon pour accord',
-                    style: 'signatureLabel',
-                    margin: [0, 40, 0, 5]
-                },
-                {
-                    text: 'Le Client',
-                    style: 'signatureText',
-                    margin: [0, 0, 0, 0]
-                }
             ],
             styles: {
                 header: {
@@ -1034,6 +880,177 @@ export class QuotationsController {
                 };
             }
         };
+
+        if (details24Months.deviceRows.length) {
+            docDefinition.content?.push(
+                // 24 months equipment table
+                {
+                    text: 'Matériel en location sur 24 mois',
+                    style: 'durationHeader',
+                    margin: [0, 0, 0, 10]
+                },
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: ['*', '*', 'auto', 'auto', 'auto', 'auto'],
+                        body: [
+                            [
+                                {text: 'Type de matériel', style: 'tableHeaderCell'},
+                                {text: 'Référence', style: 'tableHeaderCell'},
+                                {text: 'Designation', style: 'tableHeaderCell'},
+                                {text: 'Quantité', style: 'tableHeaderCell'},
+                                {text: 'Prix Unitaire HT', style: 'tableHeaderCell'},
+                                {text: 'Loyer HT', style: 'tableHeaderCell'},
+                            ],
+                            ...details24Months.deviceRows,
+                            [
+                                {text: 'Loyers Totaux (HT)', colSpan: 5, style: 'totalLabel'},
+                                {}, {}, {}, {},
+                                {text: details24Months.totalMonthlyPayment.toFixed(0) + ' DH', style: 'totalValue'}
+                            ],
+                            [
+                                {text: 'Loyer sur 24 mois (HT)', colSpan: 5, style: 'totalLabel'},
+                                {}, {}, {}, {},
+                                {text: details24Months.totalLeasingCost.toFixed(0) + ' DH', style: 'totalValue'}
+                            ]
+                        ]
+                    },
+                    layout: {
+                        hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 1 : 0.5,
+                        vLineWidth: () => 0.5,
+                        hLineColor: () => '#aaaaaa',
+                        vLineColor: () => '#aaaaaa',
+                    },
+                    margin: [0, 0, 0, 20]
+                },
+
+                {text: ''},
+            );
+        }
+        if (details36Months.deviceRows.length) {
+            docDefinition.content.push(
+                {
+                    text: 'Matériel en location sur 36 mois',
+                    style: 'durationHeader',
+                    margin: [0, 20, 0, 10]
+                },
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: ['*', '*', 'auto', 'auto', 'auto', 'auto'],
+                        body: [
+                            [
+                                {text: 'Type de matériel', style: 'tableHeaderCell'},
+                                {text: 'Référence', style: 'tableHeaderCell'},
+                                {text: 'Designation', style: 'tableHeaderCell'},
+                                {text: 'Quantité', style: 'tableHeaderCell'},
+                                {text: 'Prix Unitaire HT', style: 'tableHeaderCell'},
+                                {text: 'Loyer HT', style: 'tableHeaderCell'},
+                            ],
+                            ...details36Months.deviceRows,
+                            [
+                                {text: 'Loyers Totaux (HT)', colSpan: 5, style: 'totalLabel'},
+                                {}, {}, {}, {},
+                                {text: details36Months.totalMonthlyPayment.toFixed(0) + ' DH', style: 'totalValue'}
+                            ],
+                            [
+                                {text: 'Loyer sur 36 mois (HT)', colSpan: 5, style: 'totalLabel'},
+                                {}, {}, {}, {},
+                                {text: details36Months.totalLeasingCost.toFixed(0) + ' DH', style: 'totalValue'}
+                            ]
+                        ]
+                    },
+                    layout: {
+                        hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 1 : 0.5,
+                        vLineWidth: () => 0.5,
+                        hLineColor: () => '#aaaaaa',
+                        vLineColor: () => '#aaaaaa',
+                    },
+                    margin: [0, 0, 0, 20]
+                },
+            )
+
+        }
+        docDefinition.content.push(
+            {text: '', pageBreak: 'before'},
+            // Operation summary
+            {
+                text: 'Récapitulatif de l\'opération',
+                style: 'summaryHeader',
+                margin: [0, 20, 0, 10]
+            },
+            {
+                table: {
+                    widths: ['*', 'auto'],
+                    body: [
+                        [
+                            {text: 'Total matériel financé', style: 'summaryLabel'},
+                            {text: totalFinancedAmount.toFixed(0) + ' DH', style: 'summaryValue'}
+                        ],
+                        [
+                            {text: 'Loyers mensuels', style: 'summaryLabel'},
+                            {text: totalMonthlyPayments.toFixed(0) + ' DH', style: 'summaryValue'}
+                        ],
+                        [
+                            {text: 'Total loyers dûs sur la période du contrat', style: 'summaryLabel'},
+                            {text: totalLeasingCost.toFixed(0) + ' DH', style: 'summaryValue'}
+                        ],
+                        [
+                            {
+                                text: 'Option d\'achat activable a postériori\n' +
+                                    '(Valeur résiduelle + 2% du matériel)',
+                                style: 'summaryLabel'
+                            },
+                            {text: totalPurchaseOption.toFixed(0) + ' DH', style: 'summaryValue'}
+                        ],
+                        [
+                            {
+                                text: 'Total opération y compris l\'option d\'achat',
+                                style: 'summaryLabel',
+                                bold: true
+                            },
+                            {text: totalOperationCost.toFixed(0) + ' DH', style: 'summaryValue', bold: true}
+                        ]
+                    ]
+                },
+                layout: {
+                    hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 1 : 0.5,
+                    vLineWidth: () => 0.5,
+                    hLineColor: () => '#aaaaaa',
+                    vLineColor: () => '#aaaaaa',
+                },
+                margin: [0, 0, 0, 40]
+            },
+
+            // Conditions and signature
+            {
+                text: 'Conditions générales :',
+                style: 'conditionsHeader',
+                margin: [0, 0, 0, 5]
+            },
+            {
+                ul: [
+                    'Paiement mensuel par prélèvement automatique',
+                    'Assurance incluse dans la mensualité',
+                    'Option d\'achat en fin de contrat',
+                    'Délai de validité : 15 jours',
+                    'Engagement pour la durée totale du contrat'
+                ],
+                style: 'conditionsText',
+                margin: [0, 0, 0, 20]
+            },
+            {
+                text: 'Bon pour accord',
+                style: 'signatureLabel',
+                margin: [0, 40, 0, 5]
+            },
+            {
+                text: 'Le Client',
+                style: 'signatureText',
+                margin: [0, 0, 0, 0]
+            }
+        )
+
         // Create the PDF document
         const pdfDoc = printer.createPdfKitDocument(docDefinition);
 
