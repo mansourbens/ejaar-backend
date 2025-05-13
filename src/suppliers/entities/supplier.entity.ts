@@ -7,16 +7,16 @@ export class Supplier {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ unique: true })
+    @Column({nullable : true})
     siren: string;
 
-    @Column()
+    @Column({nullable : true})
     raisonSociale: string;
 
     @Column()
     email: string;
 
-    @Column()
+    @Column({nullable : true})
     address: string;
 
     @OneToMany(() => User, (user) => user.supplier)
