@@ -7,6 +7,8 @@ import {CreateUserDto} from "./users/dto/create-user.dto";
 import {UserRole} from "./users/enums/user-role.enum";
 import {CalculationRate} from "./calculation-rates/entities/calculation-rate.entity";
 import {CalculationRatesService} from "./calculation-rates/calculation-rates.service";
+import {ResidualConfigService} from "./residual-config/residual-config.service";
+import {RateConfigService} from "./rate-config/rate-config.service";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -29,6 +31,8 @@ async function bootstrap() {
   const usersService = app.get(UsersService);  // Inject your service to access DB
   const rolesService = app.get(RolesService);  // Inject role repo for admin role
   const calculationRatesService = app.get(CalculationRatesService);  // Inject role repo for admin role
+  const residualConfigService = app.get(ResidualConfigService);  // Inject role repo for admin role
+  const rateConfigService = app.get(RateConfigService);  // Inject role repo for admin role
 
   // Check if the super admin role exists, create it if not
   let superAdminRole = await rolesService.findByName(UserRole.SUPER_ADMIN);
@@ -63,6 +67,8 @@ async function bootstrap() {
     const t = await calculationRatesService.create(calculationRate);
     console.log(`Calculation rates created`);
   }
+  await residualConfigService.seedInitialData();
+  await rateConfigService.seedInitialData();
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

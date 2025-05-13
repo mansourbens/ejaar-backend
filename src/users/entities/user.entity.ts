@@ -3,6 +3,7 @@ import {Supplier} from "../../suppliers/entities/supplier.entity";
 import {Role} from "./role.entity";
 import * as bcrypt from 'bcryptjs';
 import {Quotation} from "../../quotations/entities/quotation.entity";
+import {CategorieCA} from "../../rate-config/enums/categorie-ca";
 
 @Entity()
 export class User {
@@ -38,6 +39,9 @@ export class User {
 
     @Column({ nullable: true })
     lastConnectionAt: Date;
+
+    @Column({ nullable: true })
+    caCategory: CategorieCA;
 
     // Method to hash the password before saving
     async hashPassword() {

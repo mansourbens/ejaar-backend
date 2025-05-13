@@ -16,6 +16,9 @@ import {APP_INTERCEPTOR} from "@nestjs/core";
 import {ConnectionTrackerInterceptor} from "./auth/interceptors/connection-tracker.interceptor";
 import { UploadFileModule } from './upload-file/upload-file.module';
 import { CalculationRatesModule } from './calculation-rates/calculation-rates.module';
+import { ResidualConfigModule } from './residual-config/residual-config.module';
+import { RateConfigModule } from './rate-config/rate-config.module';
+import { CommercialMarginModule } from './commercial-margin/commercial-margin.module';
 
 @Module({
   imports: [
@@ -61,9 +64,12 @@ import { CalculationRatesModule } from './calculation-rates/calculation-rates.mo
     QuotationsModule,
     UploadFileModule,
     CalculationRatesModule,
+    ResidualConfigModule,
+    RateConfigModule,
+    CommercialMarginModule,
   ],
   controllers: [AppController],
-  providers: [AppService, MailService
+  providers: [AppService, MailService,
 
   ],
 })

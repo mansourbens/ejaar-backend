@@ -1,4 +1,5 @@
-import {IsArray, IsNumber, IsString} from "class-validator";
+import {IsArray, IsNumber, IsOptional, IsString} from "class-validator";
+import {CategorieCA} from "../../rate-config/enums/categorie-ca";
 
 export class CreateQuotationDto {
     @IsArray()
@@ -6,6 +7,7 @@ export class CreateQuotationDto {
         type: string;
         unitCost: number;
         units: number;
+        duration: string;
     }[];
 
     @IsNumber()
@@ -16,4 +18,7 @@ export class CreateQuotationDto {
 
     @IsNumber()
     supplierId: number;
+
+    @IsOptional()
+    clientCA: CategorieCA;
 }

@@ -12,7 +12,7 @@ export class Quotation {
     @Column()
     amount: number;
 
-    @Column()
+    @Column({nullable: true})
     duration: number;
 
     @Column()
