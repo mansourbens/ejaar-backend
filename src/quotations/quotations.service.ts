@@ -18,6 +18,9 @@ export class QuotationsService {
   findAll() {
     return this.quotationRepository.find({relations: ['supplier', 'client'],  order: { createdAt: 'DESC' }});
   }
+  countToVerifyEjaar() {
+    return this.quotationRepository.count({where : {status : QuotationStatusEnum.VERIFICATION}});
+  }
   findAllByClient(clientId: string) {
     return this.quotationRepository.find({where : {client : {id : +clientId}}, order: { createdAt: 'DESC' }});
   }
@@ -30,8 +33,10 @@ export class QuotationsService {
     return `This action updates a #${id} quotation`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} quotation`;
+  async remove(id: number) {
+    const quotation = await this.quotationRepository.findOne({where: {id}});
+    if (!quotation) throw new NotFoundException("Devis n'existe pas");
+    return this.quotationRepository.remove(quotation);
   }
   async save(quotation: Quotation) {
     return this.quotationRepository.save(quotation);

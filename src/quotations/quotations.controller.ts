@@ -34,6 +34,10 @@ export class QuotationsController {
     findAll() {
         return this.quotationsService.findAll();
     }
+    @Get('/count/to-verify-ejaar')
+    countToVerifyEjaar() {
+        return this.quotationsService.countToVerifyEjaar();
+    }
 
 
     @Get('template')
@@ -152,9 +156,6 @@ export class QuotationsController {
         const devices24Months = formData.devices.filter(device => device.duration === '24');
         const devices36Months = formData.devices.filter(device => device.duration === '36');
 
-        console.log(formData);
-        console.log(devices24Months);
-        console.log(devices36Months);
         // Calculate leasing details for each group
         const calculateGroupDetails = (devices: any[], duration: number) => {
             let totalAmount = 0;
@@ -224,6 +225,7 @@ export class QuotationsController {
         const totalOperationCost = totalLeasingCost + totalPurchaseOption;
 
         quotation.amount = totalFinancedAmount;
+        quotation.totalMonthlyPayments = totalMonthlyPayments;
 
         const docDefinition: any = {
             content: [

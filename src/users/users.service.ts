@@ -8,6 +8,7 @@ import {Role} from "./entities/role.entity";
 import {UserRole} from "./enums/user-role.enum";
 import {JwtService} from "@nestjs/jwt";
 import {MailService} from "../mail/mail.service";
+import {Client} from "../client/entities/client.entity";
 
 @Injectable()
 export class UsersService {
@@ -15,6 +16,7 @@ export class UsersService {
 
     constructor(@InjectRepository(User) private readonly userRepository: Repository<User>,
                 @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
+                @InjectRepository(Client) private readonly clientRepository: Repository<Client>,
                 private jwtService: JwtService,
                 private mailService: MailService
     ) {
@@ -48,6 +50,20 @@ export class UsersService {
         user.email = createUserDto.email;
         user.password = createUserDto.password;  // Set password from DTO
         user.role = createUserDto.role;
+        if (user.role.name === UserRole.CLIENT) {
+            const client = new Client();
+            if (createUserDto.ICE) {
+                client.ICE = createUserDto.ICE;
+            }
+            if (createUserDto.raisonSociale) {
+                client.raisonSociale = createUserDto.raisonSociale;
+            }
+            if (createUserDto.address) {
+                client.address = createUserDto.address;
+            }
+            await this.clientRepository.save(client);
+            user.client = client;
+        }
         if (createUserDto.fullName) {
             user.fullName = createUserDto.fullName;
         }
@@ -62,23 +78,26 @@ export class UsersService {
     }
 
     findAll() {
-       return this.userRepository.find({relations: ['role', 'supplier']});
+       return this.userRepository.find({where : {isActive :true}, relations: ['role', 'supplier', 'client']});
     }
 
     findById(id: number) {
-        return this.userRepository.findOne({relations: ['role'], where: {id}})
+        return this.userRepository.findOne({relations: ['role'], where: {id, isActive: true}})
     }
 
     update(id: number, updateUserDto: UpdateUserDto) {
         return `This action updates a #${id} user`;
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} user`;
+    async remove(id: number) {
+        const user = await this.userRepository.findOne({where: {id}});
+        if (!user) throw new NotFoundException();
+        user.isActive = false;
+        return this.userRepository.save(user);
     }
 
     async findByEmail(email: string): Promise<User | null> {
-        return this.userRepository.findOne({where: {email}, relations: ['supplier', 'role'] });
+        return this.userRepository.findOne({where: {email, isActive: true}, relations: ['supplier', 'role'] });
     }
     async save(user:User) {
         return this.userRepository.save(user);
@@ -87,6 +106,7 @@ export class UsersService {
     findBySupplier(supplierId: number) {
         return this.userRepository.createQueryBuilder('user')
             .where('user.supplierId = :supplierId', { supplierId })
+            .where('user.isActive = true')
             .leftJoinAndSelect('user.supplier', 'supplier')
             .leftJoinAndSelect('user.role', 'role')
             .getMany();

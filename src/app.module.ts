@@ -19,6 +19,7 @@ import { CalculationRatesModule } from './calculation-rates/calculation-rates.mo
 import { ResidualConfigModule } from './residual-config/residual-config.module';
 import { RateConfigModule } from './rate-config/rate-config.module';
 import { CommercialMarginModule } from './commercial-margin/commercial-margin.module';
+import { ClientModule } from './client/client.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { CommercialMarginModule } from './commercial-margin/commercial-margin.mo
     ResidualConfigModule,
     RateConfigModule,
     CommercialMarginModule,
+    ClientModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailService,

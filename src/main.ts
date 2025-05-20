@@ -9,6 +9,7 @@ import {CalculationRate} from "./calculation-rates/entities/calculation-rate.ent
 import {CalculationRatesService} from "./calculation-rates/calculation-rates.service";
 import {ResidualConfigService} from "./residual-config/residual-config.service";
 import {RateConfigService} from "./rate-config/rate-config.service";
+import {CommercialMarginService} from "./commercial-margin/commercial-margin.service";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -33,6 +34,7 @@ async function bootstrap() {
   const calculationRatesService = app.get(CalculationRatesService);  // Inject role repo for admin role
   const residualConfigService = app.get(ResidualConfigService);  // Inject role repo for admin role
   const rateConfigService = app.get(RateConfigService);  // Inject role repo for admin role
+  const commercialMarginService = app.get(CommercialMarginService);  // Inject role repo for admin role
 
   // Check if the super admin role exists, create it if not
   let superAdminRole = await rolesService.findByName(UserRole.SUPER_ADMIN);
@@ -69,6 +71,7 @@ async function bootstrap() {
   }
   await residualConfigService.seedInitialData();
   await rateConfigService.seedInitialData();
+  await commercialMarginService.seedInitialData();
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

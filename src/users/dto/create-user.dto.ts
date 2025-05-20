@@ -2,11 +2,21 @@ import {IsEmail, IsNotEmpty, IsOptional, IsString} from "class-validator";
 import {Role} from "../entities/role.entity";
 import {Supplier} from "../../suppliers/entities/supplier.entity";
 import {User} from "../entities/user.entity";
+import {CreateClientDto} from "../../client/dto/create-client.dto";
 
 export class CreateUserDto {
     @IsEmail()
     @IsNotEmpty()
     email: string;
+
+    @IsOptional()
+    raisonSociale?: string;
+
+    @IsOptional()
+    ICE?: string;
+
+    @IsOptional()
+    address?: string;
 
     @IsString()
     @IsOptional()
@@ -26,7 +36,7 @@ export class CreateUserDto {
 
 
     @IsOptional()
-    client?: Client;
+    client?: CreateClientDto;
 
     @IsOptional()
     createdAt?: Date;
@@ -36,6 +46,8 @@ export class CreateUserDto {
 
     @IsOptional()
     userType?: UserType;
+
+
 }
 interface Client {
     id?: number;

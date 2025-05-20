@@ -13,6 +13,9 @@ export class Quotation {
     amount: number;
 
     @Column({nullable: true})
+    totalMonthlyPayments: number;
+
+    @Column({nullable: true})
     duration: number;
 
     @Column()

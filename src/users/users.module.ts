@@ -10,9 +10,10 @@ import {AuthModule} from "../auth/auth.module";
 import {JwtModule} from "@nestjs/jwt";
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {Supplier} from "../suppliers/entities/supplier.entity";
+import {Client} from "../client/entities/client.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Role]),
+  imports: [TypeOrmModule.forFeature([User, Role, Client]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

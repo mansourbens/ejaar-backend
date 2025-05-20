@@ -13,6 +13,7 @@ import {JwtStrategy} from "./auth.strategy";
 import {APP_INTERCEPTOR} from "@nestjs/core";
 import {ConnectionTrackerInterceptor} from "./interceptors/connection-tracker.interceptor";
 import {RolesService} from "../users/roles.service";
+import {Client} from "../client/entities/client.entity";
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import {RolesService} from "../users/roles.service";
       }),
     }),
     UsersModule,
-    TypeOrmModule.forFeature([User, Role])
+    TypeOrmModule.forFeature([User, Role, Client])
   ],
   providers: [AuthService, UsersService, MailService, RolesService, JwtStrategy,   {
     provide: APP_INTERCEPTOR,

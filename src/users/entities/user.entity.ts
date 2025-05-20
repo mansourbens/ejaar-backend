@@ -1,9 +1,10 @@
-import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {Supplier} from "../../suppliers/entities/supplier.entity";
 import {Role} from "./role.entity";
 import * as bcrypt from 'bcryptjs';
 import {Quotation} from "../../quotations/entities/quotation.entity";
 import {CategorieCA} from "../../rate-config/enums/categorie-ca";
+import {Client} from "../../client/entities/client.entity";
 
 @Entity()
 export class User {
@@ -27,6 +28,9 @@ export class User {
     @JoinColumn()
     supplier: Supplier;
 
+    @OneToOne(() => Client, (client) => client.user)
+    @JoinColumn()
+    client: Client;
 
     @OneToMany(() => Quotation, (quotation) => quotation.client)
     quotations: Quotation[];
@@ -42,6 +46,9 @@ export class User {
 
     @Column({ nullable: true })
     caCategory: CategorieCA;
+
+    @Column({default : true})
+    isActive: boolean;
 
     // Method to hash the password before saving
     async hashPassword() {

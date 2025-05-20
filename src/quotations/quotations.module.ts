@@ -14,10 +14,11 @@ import {RateConfigService} from "../rate-config/rate-config.service";
 import {ResidualConfigService} from "../residual-config/residual-config.service";
 import {RateConfig} from "../rate-config/entities/rate-config.entity";
 import {ResidualConfig} from "../residual-config/entities/residual-config.entity";
+import {Client} from "../client/entities/client.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Quotation, User, Supplier, Role, RateConfig, ResidualConfig])],
-    controllers: [QuotationsController],
+  imports: [TypeOrmModule.forFeature([Quotation, User, Supplier, Role, RateConfig, ResidualConfig, Client])],
+  controllers: [QuotationsController],
   providers: [QuotationsService, UsersService, SuppliersService, MailService, JwtService,
     RateConfigService, ResidualConfigService],
 })
