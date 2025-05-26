@@ -12,7 +12,7 @@ export class Quotation {
     @Column()
     amount: number;
 
-    @Column({nullable: true})
+    @Column({nullable: true, type: 'float'})
     totalMonthlyPayments: number;
 
     @Column({nullable: true})
