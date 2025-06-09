@@ -9,17 +9,19 @@ import {
   Req,
   Headers,
   UseInterceptors,
-  UploadedFile, NotFoundException, InternalServerErrorException
+  UploadedFile, NotFoundException, InternalServerErrorException, Res
 } from '@nestjs/common';
 import {UploadFileService} from './upload-file.service';
 import {UploadFileDto} from './dto/upload-file.dto';
 import {UpdateUploadFileDto} from './dto/update-upload-file.dto';
-import { Request } from 'express';
+import {Request, Response} from 'express';
 import Busboy from 'busboy';
 import * as fs from 'fs';
 import * as path from 'path';
 import {FileInterceptor} from "@nestjs/platform-express";
 import {diskStorage} from "multer";
+import {stat} from "fs/promises";
+import {createReadStream} from "fs";
 @Controller('upload')
 export class UploadFileController {
   constructor(private readonly uploadFileService: UploadFileService) {}
@@ -111,5 +113,39 @@ export class UploadFileController {
     }
 
     return {message: 'File deleted successfully'};
+  }
+
+  @Get('download/:documentId')
+  async downloadContract(
+      @Param('documentId') documentId: string,
+      @Res() res: Response,
+  ) {
+    const document = await this.uploadFileService.findOne(documentId);
+
+    if (!document) {
+      throw new NotFoundException('Contract not found for this quotation');
+    }
+
+    try {
+      // Check if file exists
+      await stat(document.path);
+
+      // Set proper headers for file download
+      res.setHeader("Access-Control-Expose-Headers", "Content-Disposition, Content-Type");
+      res.setHeader('Content-Type', document.mimetype);
+      res.setHeader(
+          'Content-Disposition',
+          `attachment; filename="${document.originalName}"`,
+      );
+
+      // Create file stream and pipe to response
+      const fileStream = createReadStream(document.path);
+      fileStream.pipe(res);
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        throw new NotFoundException('Contract file not found on server');
+      }
+      throw error;
+    }
   }
 }
