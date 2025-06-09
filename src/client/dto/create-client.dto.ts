@@ -10,7 +10,7 @@ export class CreateClientDto {
     raisonSociale: string;
 
     @IsOptional()
-    @IsPhoneNumber('MA') // or replace 'FR' with appropriate country code
+    @IsPhoneNumber('MA')
     telephone?: string;
 
     @IsOptional()

@@ -73,6 +73,9 @@ export class UsersService {
         if (createUserDto.supplier) {
             user.supplier = createUserDto.supplier;
         }
+        if (createUserDto.caCategory) {
+            user.caCategory = createUserDto.caCategory;
+        }
         await user.hashPassword();
         return this.userRepository.save(user);
     }

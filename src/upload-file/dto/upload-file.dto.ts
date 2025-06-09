@@ -1,3 +1,5 @@
+import {FileStatusEnum} from "../enums/file-status.enum";
+
 export class UploadFileDto {
     id: string;
     filename: string;
@@ -6,4 +8,6 @@ export class UploadFileDto {
     size: number;
     uploadedAt: Date;
     url: string;
+    status: FileStatusEnum;
+    rejectionReason?: string;
 }

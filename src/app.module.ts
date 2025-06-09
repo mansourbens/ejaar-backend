@@ -20,6 +20,7 @@ import { ResidualConfigModule } from './residual-config/residual-config.module';
 import { RateConfigModule } from './rate-config/rate-config.module';
 import { CommercialMarginModule } from './commercial-margin/commercial-margin.module';
 import { ClientModule } from './client/client.module';
+import { ContractModule } from './contract/contract.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { ClientModule } from './client/client.module';
     RateConfigModule,
     CommercialMarginModule,
     ClientModule,
+    ContractModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailService,

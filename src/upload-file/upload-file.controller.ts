@@ -38,7 +38,7 @@ export class UploadFileController {
   }))
   async uploadFile(
       @UploadedFile() file: Express.Multer.File,
-      @Body() body: { documentType: string; originalName: string, quotationId: string }
+      @Body() body: { documentType: string; originalName: string, quotationId: string, rectification: string }
   ) {
     const result = await this.uploadFileService.saveFileInfo({
       filename: file.filename,
@@ -47,7 +47,8 @@ export class UploadFileController {
       documentType: body.documentType,
       size: file.size,
       mimetype: file.mimetype,
-      quotationId: body.quotationId
+      quotationId: body.quotationId,
+      rectification: !!body.rectification
     });
     return result;
   }
@@ -71,6 +72,15 @@ export class UploadFileController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUploadFileDto: UpdateUploadFileDto) {
     return this.uploadFileService.update(+id, updateUploadFileDto);
+  }
+
+  @Get('validate/:id')
+  async validate(@Param('id') id: string){
+    return this.uploadFileService.validate(id);
+  }
+  @Post('reject/:id')
+  async reject(@Param('id') id: string, @Body() body: { rejectionReason }){
+    return this.uploadFileService.reject(id, body.rejectionReason);
   }
 
   @Delete(':id')

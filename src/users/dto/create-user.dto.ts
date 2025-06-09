@@ -3,6 +3,7 @@ import {Role} from "../entities/role.entity";
 import {Supplier} from "../../suppliers/entities/supplier.entity";
 import {User} from "../entities/user.entity";
 import {CreateClientDto} from "../../client/dto/create-client.dto";
+import {CategorieCA} from "../../rate-config/enums/categorie-ca";
 
 export class CreateUserDto {
     @IsEmail()
@@ -22,9 +23,6 @@ export class CreateUserDto {
     @IsOptional()
     password: string;
 
-    // Optionally, you can validate the role and supplier.
-    // If the role and supplier are required fields for creating a user,
-    // you can leave them as non-optional.
     @IsOptional()
     role: Role;
 
@@ -46,6 +44,9 @@ export class CreateUserDto {
 
     @IsOptional()
     userType?: UserType;
+
+    @IsOptional()
+    caCategory?: CategorieCA;
 
 
 }

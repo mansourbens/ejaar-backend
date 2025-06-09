@@ -16,17 +16,17 @@ export class QuotationsService {
   }
 
   findAll() {
-    return this.quotationRepository.find({relations: ['supplier', 'client'],  order: { createdAt: 'DESC' }});
+    return this.quotationRepository.find({relations: ['supplier', 'client', 'contract'],  order: { createdAt: 'DESC' }});
   }
   countToVerifyEjaar() {
     return this.quotationRepository.count({where : {status : QuotationStatusEnum.VERIFICATION}});
   }
   findAllByClient(clientId: string) {
-    return this.quotationRepository.find({where : {client : {id : +clientId}}, order: { createdAt: 'DESC' }});
+    return this.quotationRepository.find({where : {client : {id : +clientId}}, order: { createdAt: 'DESC' }, relations: ['contract']});
   }
 
   findOne(id: number) {
-    return this.quotationRepository.findOne({where: {id}});
+    return this.quotationRepository.findOne({where: {id}, relations: ['contract']});
   }
 
   update(id: number, updateQuotationDto: UpdateQuotationDto) {

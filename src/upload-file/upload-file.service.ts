@@ -1,10 +1,11 @@
-import {Injectable, UploadedFile} from '@nestjs/common';
-import { UploadFileDto } from './dto/upload-file.dto';
-import { UpdateUploadFileDto } from './dto/update-upload-file.dto';
+import {Injectable, NotFoundException} from '@nestjs/common';
+import {UploadFileDto} from './dto/upload-file.dto';
+import {UpdateUploadFileDto} from './dto/update-upload-file.dto';
 import {UploadFile} from "./entities/upload-file.entity";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {QuotationsService} from "../quotations/quotations.service";
+import {FileStatusEnum} from "./enums/file-status.enum";
 
 @Injectable()
 export class UploadFileService {
@@ -23,9 +24,16 @@ export class UploadFileService {
     size: number;
     mimetype: string;
     quotationId: string;
+    rectification: boolean;
   }) {
     const quotation = await this.quotationService.findOne(+fileInfo.quotationId);
     if (!quotation) return;
+    if (fileInfo.rectification) {
+      const oldDocs = await this.fileRepository.find( {where: {quotation: {id: +fileInfo.quotationId}, documentType: fileInfo.documentType}});
+      if (oldDocs.length > 0) {
+        await this.fileRepository.remove(oldDocs);
+      }
+    }
     const file = this.fileRepository.create({
       filename: fileInfo.filename,
       originalName: fileInfo.originalName,
@@ -34,7 +42,8 @@ export class UploadFileService {
       size: fileInfo.size,
       mimetype: fileInfo.mimetype,
       uploadedAt: new Date(),
-      quotation: quotation
+      quotation: quotation,
+      rectification: fileInfo.rectification
     });
 
     await this.fileRepository.save(file);
@@ -61,6 +70,8 @@ export class UploadFileService {
       documentType: document.documentType,
       size: document.size,
       uploadedAt: document.uploadedAt,
+      status: document.status,
+      rejectionReason: document.rectificationReason,
       url: `/uploads/${document.filename}` // Adjust based on your file serving route
     }));
   }
@@ -91,4 +102,18 @@ export class UploadFileService {
   async deleteFile(id: string): Promise<void> {
     await this.fileRepository.delete(id);
   }
+
+    async validate(id: string) {
+      const file = await this.fileRepository.findOne({where: {id}});
+      if (!file) throw new NotFoundException();
+      file.status = FileStatusEnum.VERIFE;
+      return this.fileRepository.save(file);
+    }
+    async reject(id: string, rejectionReason: string) {
+      const file = await this.fileRepository.findOne({where: {id}});
+      if (!file) throw new NotFoundException();
+      file.status = FileStatusEnum.A_RECTIFIER;
+      file.rectificationReason = rejectionReason;
+      return this.fileRepository.save(file);
+    }
 }

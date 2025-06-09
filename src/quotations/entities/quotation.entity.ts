@@ -1,8 +1,9 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany} from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany, OneToOne} from 'typeorm';
 import {Supplier} from "../../suppliers/entities/supplier.entity";
 import {User} from "../../users/entities/user.entity";
 import {QuotationStatusEnum} from "../enums/quotation-status.enum";
 import {UploadFile} from "../../upload-file/entities/upload-file.entity";
+import {Contract} from "../../contract/entities/contract.entity";
 
 @Entity()
 export class Quotation {
@@ -47,4 +48,7 @@ export class Quotation {
 
     @Column({ nullable: true })
     devices: string;
+
+    @OneToOne(() => Contract, (contract) => contract.quotation)
+    contract: Contract;
 }
