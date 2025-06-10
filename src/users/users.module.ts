@@ -11,9 +11,10 @@ import {JwtModule} from "@nestjs/jwt";
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {Supplier} from "../suppliers/entities/supplier.entity";
 import {Client} from "../client/entities/client.entity";
+import {Chat} from "../chat/entities/chat.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Role, Client]),
+  imports: [TypeOrmModule.forFeature([User, Role, Client, Chat]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

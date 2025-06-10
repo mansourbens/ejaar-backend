@@ -5,6 +5,7 @@ import * as bcrypt from 'bcryptjs';
 import {Quotation} from "../../quotations/entities/quotation.entity";
 import {CategorieCA} from "../../rate-config/enums/categorie-ca";
 import {Client} from "../../client/entities/client.entity";
+import {Chat} from "../../chat/entities/chat.entity";
 
 @Entity()
 export class User {
@@ -34,6 +35,9 @@ export class User {
 
     @OneToMany(() => Quotation, (quotation) => quotation.client)
     quotations: Quotation[];
+
+    @OneToMany(() => Chat, (chat) => chat.sender)
+    messages: Chat[];
 
     @Column({ default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;

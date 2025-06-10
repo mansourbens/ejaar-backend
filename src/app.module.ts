@@ -21,6 +21,7 @@ import { RateConfigModule } from './rate-config/rate-config.module';
 import { CommercialMarginModule } from './commercial-margin/commercial-margin.module';
 import { ClientModule } from './client/client.module';
 import { ContractModule } from './contract/contract.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { ContractModule } from './contract/contract.module';
     CommercialMarginModule,
     ClientModule,
     ContractModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailService,
