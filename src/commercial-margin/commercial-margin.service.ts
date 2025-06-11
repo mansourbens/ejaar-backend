@@ -40,7 +40,9 @@ export class CommercialMarginService {
 
   async seedInitialData() {
     await this.commercialMarginRepository.clear();
+    await this.commercialMarginRepository.query(`ALTER SEQUENCE commercial_margin_id_seq RESTART WITH 1`);
     const commercialMargin = new CommercialMargin();
+    commercialMargin.id = 1;
     commercialMargin.tauxMargeCommerciale = 4/100;
     await this.commercialMarginRepository.save(commercialMargin);
   }
